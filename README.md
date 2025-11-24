@@ -36,6 +36,25 @@ A smart QR code and barcode scanner powered by Google's Gemini 2.5 Flash model. 
 npm run build
 ```
 
+## How to Publish to GitHub Pages
+
+1.  **Create a Repository**: Create a new repository on GitHub.
+2.  **Push Code**:
+    ```bash
+    git init
+    git add .
+    git commit -m "Initial commit"
+    git branch -m main
+    git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+    git push -u origin main
+    ```
+3.  **Deploy**:
+    ```bash
+    npm run deploy
+    ```
+    This command will build your app and push it to a `gh-pages` branch.
+4.  **Settings**: Go to your GitHub Repository Settings > Pages. Ensure the source is set to "Deploy from a branch" and select `gh-pages` / `(root)`.
+
 ## Technologies
 
 *   React 19
