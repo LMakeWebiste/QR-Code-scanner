@@ -1,0 +1,7 @@
+{
+  "name": "Gemini QR Lens",
+  "description": "A smart QR code scanner that uses Google Gemini to analyze and explain scanned content for safety and context.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
