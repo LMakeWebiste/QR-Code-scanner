@@ -1,10 +1,36 @@
 import { GoogleGenAI } from "@google/genai";
 import { AnalysisResult } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// We do not instantiate globally to prevent startup crashes if key is missing
+let genAIInstance: GoogleGenAI | null = null;
+
+const getAI = () => {
+  if (!genAIInstance) {
+    const apiKey = process.env.API_KEY;
+    if (!apiKey || apiKey.includes("your_google_api_key")) {
+      console.warn("API Key is missing or invalid.");
+      // We allow it to return null or throw to be handled in the function
+    }
+    // Even if key is missing, we try to init, but the call will fail later gracefully
+    genAIInstance = new GoogleGenAI({ apiKey: apiKey || '' });
+  }
+  return genAIInstance;
+};
 
 export const analyzeQRContent = async (content: string, format?: string): Promise<AnalysisResult> => {
   try {
+    const apiKey = process.env.API_KEY;
+    if (!apiKey || apiKey === 'undefined' || apiKey === '') {
+        return {
+            safety: "unknown",
+            category: "Configuration Error",
+            summary: "API Key is missing. Please add VITE_API_KEY to your .env file or GitHub Secrets.",
+        };
+    }
+
+    const ai = getAI();
+    if (!ai) throw new Error("Could not initialize AI");
+
     const prompt = `
       You are an advanced scanner assistant using Google Search.
       
@@ -67,7 +93,7 @@ export const analyzeQRContent = async (content: string, format?: string): Promis
     return {
       safety: "unknown",
       category: "Unknown",
-      summary: "Could not perform online search.",
+      summary: "Could not perform online search. Check connection or API quota.",
     };
   }
 };
